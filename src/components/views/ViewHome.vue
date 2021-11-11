@@ -7,7 +7,7 @@ export default {
   name: 'home',
   data(){
     return{
-      hellomessage:"Hello World !!"
+      hellomessage:"Bienvenue sur le portail de GEOliennes"
     }
   }
 }

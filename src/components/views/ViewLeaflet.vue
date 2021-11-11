@@ -10,9 +10,9 @@ export default {
   name: "LeafletMapView",
   data() {
     return {
-      center: [46.779389, 6.659361],
+      center: [46.68856, 7.07903],
       lmap:null,
-      zoom: 17
+      zoom: 10
     }
   },
   methods: {
