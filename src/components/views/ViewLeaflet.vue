@@ -1,5 +1,6 @@
 <template>
   <div id="l-container"></div>
+  <div id="checkboxes"></div>
 </template>
 
 <script>
@@ -25,9 +26,10 @@ export default {
      */
     setupLeafletMap (mapcenter,mapzoom) {
       let initmap = L.map("l-container").setView(mapcenter, mapzoom);
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
+        layers: 'ch.swisstopo.landeskarte-farbe-10',
         maxZoom: 20,
-        attribution: '&copy; Openstreetmap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution: '&copy; Swisstopo | &copy; <a href="https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0">OpenStreetMap</a> contributors'
       }).addTo(initmap);
       return initmap
     }
