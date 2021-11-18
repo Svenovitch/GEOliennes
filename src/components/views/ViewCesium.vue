@@ -10,8 +10,8 @@ export default {
   name: "CesiumGlobeView",
   data() {
     return{
-      center: [6.659361,46.779389],
-      defaultheight:1500.,
+      center: [7.07903, 46.68856],
+      defaultheight:100000.,
       viewer:null
     }
   },
