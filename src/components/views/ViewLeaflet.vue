@@ -29,6 +29,17 @@ export default {
         maxZoom: 20,
         attribution: '&copy; Openstreetmap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(initmap);
+      //Paramètres pour l'icone des éoliennes
+      var iconeoliennes = L.Icon.extend({
+      options: {
+        shadowUrl: null,
+        iconAnchor: new L.Point(14, 14),//Centrage de l'icone au milieu de ce dernier
+        iconSize: new L.Point(28, 28),//Taille de l'icone
+        }
+      });
+      //Lien vers l'icone au format "png"
+      var infoiconeoliennes = new iconeoliennes({iconUrl: 'eolienne.png'});
+      var marker = L.marker([46.67679, 7.02146],{icon: infoiconeoliennes}).addTo(initmap); //Ajoute un marker
       return initmap
     }
   },
