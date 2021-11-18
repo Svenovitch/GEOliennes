@@ -29,7 +29,7 @@ export default {
       L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
         layers: 'ch.swisstopo.landeskarte-farbe-10',
         maxZoom: 20,
-        attribution: '&copy; Swisstopo | &copy; <a href="https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0">OpenStreetMap</a> contributors'
+        attribution: '&copy; Swisstopo | &copy; <a href="https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0"></a>'
       }).addTo(initmap);
     return initmap
     },
