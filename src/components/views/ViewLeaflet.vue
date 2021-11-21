@@ -37,17 +37,17 @@ export default {
     AffichageMarkers () {
       //Paramètres pour l'icone des éoliennes      
       var locations = [
-        ["LOCATION_1", 46.67679,7.02146],
-        ["LOCATION_2", 46.66365,7.00686],
-        ["LOCATION_3", 46.67890,6.87359],
-        ["LOCATION_4", 46.65247,6.84562],
-        ["LOCATION_5", 46.62848,6.90941],
-        ["LOCATION_6", 46.61058,6.94127],
-        ["LOCATION_7", 46.68031,7.25892],
-        ["LOCATION_8", 46.69877,7.26710],
-        ["LOCATION_9", 46.74431,6.84192],
-        ["LOCATION_10", 46.84741,7.11054],
-        ["LOCATION_11", 46.83535,7.09383]
+        ["Gibloux 1", 46.67679,7.02146],
+        ["Gibloux 2", 46.66365,7.00686],
+        ["Glâney 1", 46.67890,6.87359],
+        ["Glâney 2", 46.65247,6.84562],
+        ["Vuisternens", 46.62848,6.90941],
+        ["Esserta", 46.61058,6.94127],
+        ["Schwyberg 1", 46.68031,7.25892],
+        ["Schwyberg 2", 46.69877,7.26710],
+        ["Surpierre-Cheiry", 46.74431,6.84192],
+        ["Sonnaz 1", 46.84741,7.11054],
+        ["Sonnaz 2", 46.83535,7.09383]
       ];
       var iconeoliennes = L.icon({
         iconUrl: require('../../assets/eolienne.png'),
@@ -56,16 +56,25 @@ export default {
         });
       //Lien vers l'icone au format "png"
       for (var i = 0; i < locations.length; i++) {
-        var markers = new L.marker([locations[i][1], locations[i][2]], {icon: iconeoliennes})
+        var markers = L.marker([locations[i][1], locations[i][2]], {icon: iconeoliennes})
           .bindPopup(locations[i][0])
           .addTo(this.lmap);
       }
-      return 
+      return markers
+    },
+  
+    AffichageViewsheds () {
+      var ViewshedUrl = require('../../assets/Vuisternens1.png'),
+        ViewshedBounds = [[46.4354657239999966, 6.6232650810000004], [47.0140361050000024, 7.3865939730000001]];
+        L.imageOverlay(ViewshedUrl, ViewshedBounds, {opacity: 0.60}).addTo(this.lmap); 
+      return
     }
+  
   },
   mounted() {
     this.lmap= this.setupLeafletMap(this.center,this.zoom);
     this.AffichageMarkers()
+    this.AffichageViewsheds()
     },
 }
 </script>
