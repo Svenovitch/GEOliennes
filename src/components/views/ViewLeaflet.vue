@@ -24,12 +24,18 @@ export default {
      * @param {number} mapzoom zommlevel
      * @returns {Map} initmap new leaflet map
      */
+    
     setupLeafletMap (mapcenter,mapzoom) {
       let initmap = L.map("l-container").setView(mapcenter, mapzoom);
       L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
         layers: 'ch.swisstopo.landeskarte-farbe-10',
         maxZoom: 20,
-        attribution: '&copy; Swisstopo | &copy; <a href="https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0"></a>'
+        minZoom: 8,
+        maxBounds:[
+            [45.680, 5.130],
+            [47.860, 11.420]
+            ],
+        attribution: '&copy; <a href="https://map.geo.admin.ch">Swisstopo</a>',
       }).addTo(initmap);
       //Paramètres pour l'icone des éoliennes
       var iconeoliennes = L.Icon.extend({
