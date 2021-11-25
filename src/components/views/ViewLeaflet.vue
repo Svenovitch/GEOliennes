@@ -1,6 +1,5 @@
 <template>
   <div id="l-container"></div>
-  <div id="checkboxes"></div>
 </template>
 
 <script>
@@ -26,20 +25,48 @@ export default {
      */
     
     setupLeafletMap (mapcenter,mapzoom) {
-      let initmap = L.map("l-container").setView(mapcenter, mapzoom);
-      L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
-        layers: 'ch.swisstopo.landeskarte-farbe-10',
-        maxZoom: 20,
-        minZoom: 8,
+      let initmap = L.map("l-container", {
+        maxZoom: 18,
+        minZoom: 7,
         maxBounds:[
             [45.680, 5.130],
             [47.860, 11.420]
             ],
+      }
+      ).setView(mapcenter, mapzoom);
+      L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
+        layers: 'ch.swisstopo.landeskarte-farbe-10',        
         attribution: '&copy; <a href="https://map.geo.admin.ch">Swisstopo</a>',
       }).addTo(initmap);
     return initmap
     },
-     
+
+    setupBaseMaps () {
+      let basemaps = {
+        'Carte nationale': L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
+          //Choix de la couche disponible dans le wms de Swisstopo
+          layers: 'ch.swisstopo.landeskarte-farbe-10',
+          //Insertion d'informations sur la provenance/la source du fond de plan
+          attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
+        }),
+        Swissimage: L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
+          //Choix de la couche disponible dans le wms de Swisstopo
+          layers: 'ch.swisstopo.swissimage',
+          //Insertion d'informations sur la provenance/la source du fond de plan
+          attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
+        }),
+        OSM: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+            'Imagery <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: 'mapbox/streets-v11',
+          tileSize: 512,
+          zoomOffset: -1
+        }),
+      };
+    L.control.layers(basemaps).addTo(this.lmap);
+    return basemaps
+    },
+
     AffichageMarkers () {
       //Paramètres pour l'icone des éoliennes      
       var locations = [
@@ -78,8 +105,10 @@ export default {
   
   },
   mounted() {
-    this.lmap= this.setupLeafletMap(this.center,this.zoom);
-    this.AffichageMarkers()
+    this.lmap = this.setupLeafletMap(this.center,this.zoom);
+    this.setupBaseMaps();
+    this.AffichageMarkers();
+    L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
     this.AffichageViewsheds()
     },
 }
