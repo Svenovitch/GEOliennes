@@ -114,7 +114,11 @@ export default {
     },
   
     AffichageViewsheds () {
-      var ViewshedUrl = require('../../assets/Vuisternens1.png'),
+      //var Viewsheds = {
+      //"Vuisternens": require('../../assets/Vuisternens.png'),
+      //};
+
+      var ViewshedUrl = require('../../assets/Vuisternens.png'),
         ViewshedBounds = [[46.4354657239999966, 6.6232650810000004], [47.0140361050000024, 7.3865939730000001]];
         L.imageOverlay(ViewshedUrl, ViewshedBounds, {opacity: 0.60}).addTo(this.lmap); 
       return
@@ -134,6 +138,6 @@ export default {
 
 <style scoped>
 #l-container {
-  height: 500px;
+  height: 700px;
 }
 </style>

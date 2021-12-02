@@ -33,6 +33,9 @@ export default {
      getCesiumTileset(){
       return new Cesium.Cesium3DTileset({
         url: "https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.swisstlm3d.3d/20190313/tileset.json"
+      }),
+      new Cesium.Cesium3DTileset({
+        url: "https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.vegetation.3d/20190313/tileset.json"
       });
     },
     /**
@@ -42,12 +45,12 @@ export default {
      */
     setupCesiumGlobe () {
       // Etendue de la Suisse
-//      let rectangle = Cesium.Rectangle.fromDegrees(
-//        5.013926957923385,
-//        45.35600133779394,
-//        11.477436312994008,
-//        48.27502358353741
-//      ),
+      let rectangle = Cesium.Rectangle.fromDegrees(
+        5.013926957923385,
+        45.35600133779394,
+        11.477436312994008,
+        48.27502358353741
+      );
       let viewer = new Cesium.Viewer('cesium-container', {
         baseLayerPicker: false,
         terrainProvider: new Cesium.CesiumTerrainProvider({
@@ -62,7 +65,7 @@ export default {
             numberOfLevelZeroTilesX: 2,
             numberOfLevelZeroTilesY: 1
           }),
-//          rectangle: rectangle
+          rectangle: rectangle
         }),
         fullscreenButton: false,
         homeButton: false,
@@ -75,6 +78,7 @@ export default {
         navigationHelpButton: false,
         scene3DOnly: true
       });
+      return viewer
     }
   },
 
@@ -86,7 +90,7 @@ export default {
     this.flytodirection(this.center,this.defaultheight,this.viewer)  
     
     // Ajoute Swissbuilding
-    this.viewer.scene.primitives.add(getCesiumTileset());
+    this.viewer.scene.primitives.add(this.getCesiumTileset());
   },
 };
 </script>
