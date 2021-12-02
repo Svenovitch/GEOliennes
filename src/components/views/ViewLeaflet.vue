@@ -27,18 +27,10 @@ export default {
 
     setupBaseMaps () {
       let basemaps = {
-        'Carte nationale': L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
-          //Choix de la couche disponible dans le wms de Swisstopo
-          layers: 'ch.swisstopo.landeskarte-farbe-10',
-          //Insertion d'informations sur la provenance/la source du fond de plan
-          attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
-        }),
-        'Swissimage': L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
-          //Choix de la couche disponible dans le wms de Swisstopo
-          layers: 'ch.swisstopo.swissimage',
-          //Insertion d'informations sur la provenance/la source du fond de plan
-          attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
-        }),
+        'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.landeskarte-farbe-10/default/current/3857/{z}/{x}/{y}.png'
+        ),
+        'Swissimage': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
+        ),
         'OSM': L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
             'Imagery <a href="https://www.mapbox.com/">Mapbox</a>',
