@@ -5,7 +5,7 @@
 <script>
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
-
+import 'leaflet.polylinemeasure'
 
 export default {
   name: "LeafletMapView",
@@ -43,21 +43,21 @@ export default {
     },
 
     setupPolylineMeasure () {
-      let polylineMeasure = L.control.polylineMeasure ({position:'topleft', unit:'metres', showBearings:false, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false})
-          polylineMeasure.addTo (lmap);
+      let polylineMeasure =  L.control.polylineMeasure({position:'topleft', unit:'metres', showBearings:false, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false})
+          polylineMeasure.addTo (this.lmap);
           //Code pour les debugs 
           function debugevent(e) { console.debug(e.type, e, polylineMeasure._currentLine) }
 
-                map.on('polylinemeasure:toggle', debugevent);
-                map.on('polylinemeasure:start', debugevent);
-                map.on('polylinemeasure:resume', debugevent);
-                map.on('polylinemeasure:finish', debugevent);
-                map.on('polylinemeasure:change', debugevent);
-                map.on('polylinemeasure:clear', debugevent);
-                map.on('polylinemeasure:add', debugevent);
-                map.on('polylinemeasure:insert', debugevent);
-                map.on('polylinemeasure:move', debugevent);
-                map.on('polylinemeasure:remove', debugevent);
+                this.lmap.on('polylinemeasure:toggle', debugevent);
+                this.lmap.on('polylinemeasure:start', debugevent);
+                this.lmap.on('polylinemeasure:resume', debugevent);
+                this.lmap.on('polylinemeasure:finish', debugevent);
+                this.lmap.on('polylinemeasure:change', debugevent);
+                this.lmap.on('polylinemeasure:clear', debugevent);
+                this.lmap.on('polylinemeasure:add', debugevent);
+                this.lmap.on('polylinemeasure:insert', debugevent);
+                this.lmap.on('polylinemeasure:move', debugevent);
+                this.lmap.on('polylinemeasure:remove', debugevent);
     return polylineMeasure
     },           
 
