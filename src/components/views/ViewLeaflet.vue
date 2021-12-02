@@ -52,7 +52,7 @@ export default {
 
     setupPolylineMeasure () {
       let polylineMeasure = L.control.polylineMeasure ({position:'topleft', unit:'metres', showBearings:false, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false})
-          polylineMeasure.addTo (map);
+          polylineMeasure.addTo (lmap);
           //Code pour les debugs 
           function debugevent(e) { console.debug(e.type, e, polylineMeasure._currentLine) }
 
