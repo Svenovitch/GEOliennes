@@ -5,6 +5,7 @@
 <script>
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
+import 'leaflet.polylinemeasure'
 
 export default {
   name: "LeafletMapView",
@@ -23,8 +24,44 @@ export default {
      * @param {number} mapzoom zommlevel
      * @returns {Map} initmap new leaflet map
      */
-    
-    setupLeafletMap (mapcenter,mapzoom) {
+
+    setupBaseMaps () {
+      let basemaps = {
+        'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.landeskarte-farbe-10/default/current/3857/{z}/{x}/{y}.png'
+        ),
+        'Swissimage': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
+        ),
+        'OSM': L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+            'Imagery <a href="https://www.mapbox.com/">Mapbox</a>',
+          id: 'mapbox/streets-v11',
+          tileSize: 512,
+          zoomOffset: -1
+        }),
+      };
+    return basemaps
+    },
+
+    setupPolylineMeasure () {
+      let polylineMeasure =  L.control.polylineMeasure({position:'topleft', unit:'metres', showBearings:false, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false})
+          polylineMeasure.addTo (this.lmap);
+          //Code pour les debugs 
+          function debugevent(e) { console.debug(e.type, e, polylineMeasure._currentLine) }
+
+                this.lmap.on('polylinemeasure:toggle', debugevent);
+                this.lmap.on('polylinemeasure:start', debugevent);
+                this.lmap.on('polylinemeasure:resume', debugevent);
+                this.lmap.on('polylinemeasure:finish', debugevent);
+                this.lmap.on('polylinemeasure:change', debugevent);
+                this.lmap.on('polylinemeasure:clear', debugevent);
+                this.lmap.on('polylinemeasure:add', debugevent);
+                this.lmap.on('polylinemeasure:insert', debugevent);
+                this.lmap.on('polylinemeasure:move', debugevent);
+                this.lmap.on('polylinemeasure:remove', debugevent);
+    return polylineMeasure
+    },           
+
+    setupLeafletMap (mapcenter,mapzoom,basemapObject) {
       let initmap = L.map("l-container", {
         maxZoom: 18,
         minZoom: 7,
@@ -34,37 +71,9 @@ export default {
             ],
       }
       ).setView(mapcenter, mapzoom);
-      L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
-        layers: 'ch.swisstopo.landeskarte-farbe-10',        
-        attribution: '&copy; <a href="https://map.geo.admin.ch">Swisstopo</a>',
-      }).addTo(initmap);
+      basemapObject.Swissimage.addTo(initmap);
+      L.control.layers(basemapObject).addTo(initmap);
     return initmap
-    },
-
-    setupBaseMaps () {
-      let basemaps = {
-        'Carte nationale': L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
-          //Choix de la couche disponible dans le wms de Swisstopo
-          layers: 'ch.swisstopo.landeskarte-farbe-10',
-          //Insertion d'informations sur la provenance/la source du fond de plan
-          attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
-        }),
-        Swissimage: L.tileLayer.wms('https://wms.geo.admin.ch/?SERVICE=WMS&VERSION=1.3.0', {
-          //Choix de la couche disponible dans le wms de Swisstopo
-          layers: 'ch.swisstopo.swissimage',
-          //Insertion d'informations sur la provenance/la source du fond de plan
-          attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
-        }),
-        OSM: L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-            'Imagery <a href="https://www.mapbox.com/">Mapbox</a>',
-          id: 'mapbox/streets-v11',
-          tileSize: 512,
-          zoomOffset: -1
-        }),
-      };
-    L.control.layers(basemaps).addTo(this.lmap);
-    return basemaps
     },
 
     AffichageMarkers () {
@@ -97,7 +106,11 @@ export default {
     },
   
     AffichageViewsheds () {
-      var ViewshedUrl = require('../../assets/Vuisternens1.png'),
+      //var Viewsheds = {
+      //"Vuisternens": require('../../assets/Vuisternens.png'),
+      //};
+
+      var ViewshedUrl = require('../../assets/Vuisternens.png'),
         ViewshedBounds = [[46.4354657239999966, 6.6232650810000004], [47.0140361050000024, 7.3865939730000001]];
         L.imageOverlay(ViewshedUrl, ViewshedBounds, {opacity: 0.60}).addTo(this.lmap); 
       return
@@ -105,17 +118,18 @@ export default {
   
   },
   mounted() {
-    this.lmap = this.setupLeafletMap(this.center,this.zoom);
-    this.setupBaseMaps();
+    let basemapObject = this.setupBaseMaps();
+    this.lmap = this.setupLeafletMap(this.center,this.zoom,basemapObject);
     this.AffichageMarkers();
     L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
-    this.AffichageViewsheds()
+    this.AffichageViewsheds();
+    this.setupPolylineMeasure()
     },
 }
 </script>
 
 <style scoped>
 #l-container {
-  height: 500px;
+  height: 700px;
 }
 </style>
