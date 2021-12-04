@@ -42,6 +42,28 @@ export default {
     return basemaps
     },
 
+    ZoomOnObjects () {
+      var zoom_to = L.control({position: "topleft"});//Position en haut à gauche du contrôle
+      zoom_to.onAdd = function(lmap) {
+        var div = L.DomUtil.create("div", "menu");//Fait le lien avec le css
+        L.DomEvent.on(div, 'mouseover', L.DomEvent.stopPropagation);//Permet que la souris passe sur la fenêtre et pas sur la map
+        L.DomEvent.on(div, 'click', L.DomEvent.stopPropagation);//Permet que l'on clique sur la bouton et pas sur la map
+        div.innerHTML = //Définit un division HTML dans le javascript
+        '<div style="font-weight: bold; text-decoration:underline;"><p>Zoomer sur un élément : <br></div>'+ //Créer le titre et le style 
+          '<select id="liste" onchange="zoom(this.value)">'+ //Créer une liste déroulante
+            '<option value="General">Vue générale</option>'+
+            '<option value="Gare_Cornavin">Gare Cornavin</option>'+
+            '<option value="Eglise">Eglise de Notre-Dame</option>'+
+            '<option value="Hotel">Hotel des postes</option>'+
+            '<option value="Servette">Pont de la rue de la Servette</option>'+
+          '</select>'+
+        '</p>'
+        return div;
+      };
+      zoom_to.addTo(this.lmap);//Ajoute à la carte
+    return
+    },
+
     setupPolylineMeasure () {
       let polylineMeasure = L.control.polylineMeasure ({position:'topleft', unit:'metres', showBearings:false, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false})
           polylineMeasure.addTo (map);
@@ -124,12 +146,23 @@ export default {
     L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
     this.AffichageViewsheds();
     this.setupPolylineMeasure()
+    this.ZoomOnObjects ()
     },
 }
 </script>
 
 <style scoped>
 #l-container {
-  height: 700px;
+  height: 600px;
+}
+/*Paramètres de style des menus dans leaflet */
+.menu {
+    line-height: 24px;
+    font-family: "Arial";
+    padding: 5px 5px;
+    background-color: #FFFFFF ;
+    border-radius: 5px;
+    width: 200px;
+    border: 1px solid;
 }
 </style>
