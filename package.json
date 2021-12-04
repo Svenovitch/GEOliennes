@@ -13,6 +13,7 @@
     "cesium": "^1.84.0",
     "core-js": "^3.6.5",
     "leaflet": "^1.7.1",
+    "leaflet.polylinemeasure": "^3.0.0",
     "ol": "^6.9.0",
     "vue": "^3.2.20",
     "vue-loader": "^15.9.8",

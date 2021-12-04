@@ -29,12 +29,15 @@ export default {
       });
     },
 
-    // defini la source swissbuilding
-     getCesiumTileset(){
+    // defini la source SwissBuilding
+     getSwissBuilding(){
       return new Cesium.Cesium3DTileset({
         url: "https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.swisstlm3d.3d/20190313/tileset.json"
-      }),
-      new Cesium.Cesium3DTileset({
+      });
+    },
+    // defini la source SwissTLM
+     getSwissTLM(){
+      return new Cesium.Cesium3DTileset({
         url: "https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.vegetation.3d/20190313/tileset.json"
       });
     },
@@ -87,10 +90,12 @@ export default {
     Cesium.Ion.defaultAccessToken = process.env.VUE_APP_CESIUM_ION_TOKEN;
     
     this.viewer = this.setupCesiumGlobe();
+    this.viewer.scene.globe.depthTestAgainstTerrain = true;
     this.flytodirection(this.center,this.defaultheight,this.viewer)  
     
-    // Ajoute Swissbuilding
-    this.viewer.scene.primitives.add(this.getCesiumTileset());
+    // Ajoute Swissbuilding et SwissTLM
+    this.viewer.scene.primitives.add(this.getSwissBuilding());
+    this.viewer.scene.primitives.add(this.getSwissTLM());
   },
 };
 </script>
