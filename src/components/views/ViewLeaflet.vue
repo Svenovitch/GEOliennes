@@ -5,7 +5,7 @@
 <script>
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
-import 'leaflet.polylinemeasure'
+import 'leaflet.polylinemeasure';
 
 export default {
   name: "LeafletMapView",
@@ -27,7 +27,7 @@ export default {
 
     setupBaseMaps () {
       let basemaps = {
-        'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.landeskarte-farbe-10/default/current/3857/{z}/{x}/{y}.png'
+        'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg'
         ),
         'Swissimage': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
         ),
@@ -42,20 +42,26 @@ export default {
     return basemaps
     },
 
-    ZoomOnObjects () {
+    MenuZoom () {
       var zoom_to = L.control({position: "topleft"});//Position en haut à gauche du contrôle
       zoom_to.onAdd = function(lmap) {
         var div = L.DomUtil.create("div", "menu");//Fait le lien avec le css
         L.DomEvent.on(div, 'mouseover', L.DomEvent.stopPropagation);//Permet que la souris passe sur la fenêtre et pas sur la map
         L.DomEvent.on(div, 'click', L.DomEvent.stopPropagation);//Permet que l'on clique sur la bouton et pas sur la map
         div.innerHTML = //Définit un division HTML dans le javascript
-        '<div style="font-weight: bold; text-decoration:underline;"><p>Zoomer sur un élément : <br></div>'+ //Créer le titre et le style 
+        '<div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"><p>Eoliennes: <br></div>'+ //Créer le titre et le style 
           '<select id="liste" onchange="zoom(this.value)">'+ //Créer une liste déroulante
-            '<option value="General">Vue générale</option>'+
-            '<option value="Gare_Cornavin">Gare Cornavin</option>'+
-            '<option value="Eglise">Eglise de Notre-Dame</option>'+
-            '<option value="Hotel">Hotel des postes</option>'+
-            '<option value="Servette">Pont de la rue de la Servette</option>'+
+            '<option value="Gibloux 1">Gibloux 1</option>'+
+            '<option value="Gibloux 2">Gibloux 2</option>'+
+            '<option value="Glâney 1">Glâney 1</option>'+
+            '<option value="Glâney 2">Glâney 2</option>'+
+            '<option value="Vuisternens">Vuisternens</option>'+
+            '<option value="Esserta">Esserta</option>'+
+            '<option value="Schwyberg 1">Schwyberg 1</option>'+
+            '<option value="Schwyberg 2">Schwyberg 2</option>'+
+            '<option value="Surpierre-Cheiry">Surpierre-Cheiry</option>'+
+            '<option value="Sonnaz 1">Sonnaz 1</option>'+
+            '<option value="Sonnaz 2">Sonnaz 2</option>'+
           '</select>'+
         '</p>'
         return div;
@@ -136,7 +142,45 @@ export default {
         ViewshedBounds = [[46.4354657239999966, 6.6232650810000004], [47.0140361050000024, 7.3865939730000001]];
         L.imageOverlay(ViewshedUrl, ViewshedBounds, {opacity: 0.60}).addTo(this.lmap); 
       return
-    }
+    },
+
+    ZoomOnObjects(){
+      var test = document.getElementById('liste').value //Récupere la valeur dans la liste 
+      if (test == "Gibloux 1") { //Création de la condition
+        var map_zoom = this.lmap.setView([locations[0][1], locations[0][2]], 10); //Changement du zoom
+        }
+      if (test == "Gibloux 2") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[1][1], locations[1][2]], 10);//Changement du zoom
+        }
+      if (test == "Glâney 1") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[2][1], locations[2][2]], 10);//Changement du zoom
+        }
+      if (test == "Glâney 2") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[3][1], locations[3][2]], 10);//Changement du zoom
+        }
+      if (test == "Vuisternens") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[4][1], locations[4][2]], 10);//Changement du zoom
+        }
+      if (test == "Esserta") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[5][1], locations[5][2]], 10);//Changement du zoom
+        }
+      if (test == "Schwyberg 1") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[6][1], locations[6][2]], 10);//Changement du zoom
+        }
+      if (test == "Schwyberg 2") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[7][1], locations[7][2]], 10);//Changement du zoom
+        }
+      if (test == "Surpierre-Cheiry") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[8][1], locations[8][2]], 10);//Changement du zoom
+        }
+      if (test == "Sonnaz 1") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[9][1], locations[9][2]], 10);//Changement du zoom
+        }
+      if (test == "Sonnaz 2") {//Création de la condition
+        var map_zoom = this.lmap.setView([locations[10][1], locations[10][2]], 10);//Changement du zoom
+        }
+      return
+    },
   
   },
   mounted() {
@@ -145,8 +189,9 @@ export default {
     this.AffichageMarkers();
     L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
     this.AffichageViewsheds();
-    this.setupPolylineMeasure()
-    this.ZoomOnObjects ()
+    this.setupPolylineMeasure();
+    this.MenuZoom ();
+    this.ZoomOnObjects();
     },
 }
 </script>
