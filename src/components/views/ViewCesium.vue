@@ -30,17 +30,29 @@ export default {
     },
 
     // defini la source SwissBuilding
-     getSwissBuilding(){
+    getSwissBuilding(){
       return new Cesium.Cesium3DTileset({
         url: "https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.swisstlm3d.3d/20190313/tileset.json"
       });
     },
     // defini la source SwissTLM
-     getSwissTLM(){
+    getSwissTLM(){
       return new Cesium.Cesium3DTileset({
         url: "https://vectortiles0.geo.admin.ch/3d-tiles/ch.swisstopo.vegetation.3d/20190313/tileset.json"
       });
     },
+
+    // defini le model d'eolienne
+    getEolienne(){
+      let pos = Cesium.Cartesian3.fromDegrees(7.02146, 46.67679, 0);
+      let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(pos);
+      return new Cesium.Model.fromGltf({
+        url : '../../assets/scene.gltf',
+        modelMatrix : modelMatrix,
+        scale : 10
+      });
+    },
+
     /**
      * Init Cesium globe
      * 
@@ -96,6 +108,9 @@ export default {
     // Ajoute Swissbuilding et SwissTLM
     this.viewer.scene.primitives.add(this.getSwissBuilding());
     this.viewer.scene.primitives.add(this.getSwissTLM());
+
+    // Ajoute les eoliennes
+    this.viewer.scene.primitives.add(this.getEolienne());
   },
 };
 </script>
