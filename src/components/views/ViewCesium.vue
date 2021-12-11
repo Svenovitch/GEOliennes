@@ -42,20 +42,6 @@ export default {
       });
     },
 
-    // defini position des eoliennes
-    // a completer
-
-    // defini le model d'eolienne
-//    getEolienne(){
-//      let pos = Cesium.Cartesian3.fromDegrees(7.02146, 46.67679, 0);
-//      let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(pos);
-//      return new Cesium.Model.fromGltf({
-//        url : '../../assets/scene.gltf',
-//        modelMatrix : modelMatrix,
-//        scale : 10
- //     });
-//    },
-
     /**
      * Init Cesium globe
      * 
@@ -114,7 +100,7 @@ export default {
     this.viewer.scene.primitives.add(this.getSwissBuilding());
     this.viewer.scene.primitives.add(this.getSwissTLM());
 
-    // Ajoute les eoliennes
+    // Ajoute les eoliennes -- à simplifier avec methode
     var positions = [
       Cesium.Cartesian3.fromDegrees(7.02146, 46.67679),
       Cesium.Cartesian3.fromDegrees(7.00686, 46.66365),
@@ -132,6 +118,10 @@ export default {
     for (var i = 0; i < positions.length; i++) {
       this.viewer.entities.add({
         position: positions[i],
+//        model : {
+//          uri : "../../assets/scene.gltf",
+//          scale : 10,
+//        },
         ellipse: {
           semiMinorAxis: 50.0,
           semiMajorAxis: 50.0,
