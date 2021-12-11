@@ -1,5 +1,6 @@
 {
-  "name": "vue3-cesium-leaflet-seed",
+  // repris dans le titre de la page
+  "name": "GIO1 - Projet GEOliennes",
   "version": "0.2.0",
   "private": true,
   "scripts": {

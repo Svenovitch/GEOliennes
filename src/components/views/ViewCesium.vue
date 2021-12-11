@@ -11,7 +11,7 @@ export default {
   data() {
     return{
       center: [7.07903, 46.68856],
-      defaultheight:100000.,
+      defaultheight:10000.,
       viewer:null
     }
   },
@@ -42,16 +42,19 @@ export default {
       });
     },
 
+    // defini position des eoliennes
+    // a completer
+
     // defini le model d'eolienne
-    getEolienne(){
-      let pos = Cesium.Cartesian3.fromDegrees(7.02146, 46.67679, 0);
-      let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(pos);
-      return new Cesium.Model.fromGltf({
-        url : '../../assets/scene.gltf',
-        modelMatrix : modelMatrix,
-        scale : 10
-      });
-    },
+//    getEolienne(){
+//      let pos = Cesium.Cartesian3.fromDegrees(7.02146, 46.67679, 0);
+//      let modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(pos);
+//      return new Cesium.Model.fromGltf({
+//        url : '../../assets/scene.gltf',
+//        modelMatrix : modelMatrix,
+//        scale : 10
+ //     });
+//    },
 
     /**
      * Init Cesium globe
@@ -100,9 +103,11 @@ export default {
   mounted() {
     // add cesium ion token to the app
     Cesium.Ion.defaultAccessToken = process.env.VUE_APP_CESIUM_ION_TOKEN;
-    
+    Cesium.GeoJsonDataSource.clampToGround = true
+
     this.viewer = this.setupCesiumGlobe();
-    this.viewer.scene.globe.depthTestAgainstTerrain = true;
+    // Transparence du MNT, décommenter pour defaire le calcul de profondeur
+    //this.viewer.scene.globe.depthTestAgainstTerrain = true;
     this.flytodirection(this.center,this.defaultheight,this.viewer)  
     
     // Ajoute Swissbuilding et SwissTLM
@@ -110,7 +115,47 @@ export default {
     this.viewer.scene.primitives.add(this.getSwissTLM());
 
     // Ajoute les eoliennes
-    this.viewer.scene.primitives.add(this.getEolienne());
+    var positions = [
+      Cesium.Cartesian3.fromDegrees(7.02146, 46.67679),
+      Cesium.Cartesian3.fromDegrees(7.00686, 46.66365),
+      Cesium.Cartesian3.fromDegrees(6.87359, 46.67890),
+      Cesium.Cartesian3.fromDegrees(6.84562, 46.65247),
+      Cesium.Cartesian3.fromDegrees(6.90941, 46.62848),
+      Cesium.Cartesian3.fromDegrees(6.94127, 46.61058),
+      Cesium.Cartesian3.fromDegrees(7.25892, 46.68031),
+      Cesium.Cartesian3.fromDegrees(7.26710, 46.69877),
+      Cesium.Cartesian3.fromDegrees(6.84192, 46.74431),
+      Cesium.Cartesian3.fromDegrees(7.11054, 46.84741),
+      Cesium.Cartesian3.fromDegrees(7.09383, 46.83535),
+    ];
+
+    for (var i = 0; i < positions.length; i++) {
+      this.viewer.entities.add({
+        position: positions[i],
+        ellipse: {
+          semiMinorAxis: 50.0,
+          semiMajorAxis: 50.0,
+          height: 0,
+          extrudedHeight: 500.0,
+          material: Cesium.Color.AQUA,
+        },
+      })
+    };
+
+    var entities = this.viewer.entities;
+
+    var promise = Cesium.sampleTerrainMostDetailed(this.viewer.terrainProvider, positions);
+    Cesium.when(promise, function(){
+        for (var i = 0; i < entities.length; i++) {
+            var entity = entities[i];
+            var position = positions[i];
+            console.log(position);
+            terrainSamplePositions.push( Cesium.Cartographic.fromCartesian(position));
+            var terrainHeight = terrainSamplePositions[i].height;
+            entity.ellipse.height = terrainHeight;
+            entity.ellipse.extrudedHeight = 500 + terrainHeight;
+        }
+    });
   },
 };
 </script>
