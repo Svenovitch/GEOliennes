@@ -1,9 +1,8 @@
 <template>
   <div id="l-container"></div>
   <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
-  <select v-model="eolienne">
+  <select @change="ZoomOnObjects(eolienne)" v-model="eolienne">
     <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
-    <option v-on:change="ZoomOnObjects()"></option>
   </select>
 </template>
 
@@ -13,28 +12,29 @@ import L from 'leaflet';
 import 'leaflet.polylinemeasure';
 import { toFunction } from 'ol/style/Style';
 import Interaction from 'ol/interaction/Interaction';
+import { forEachCorner } from 'ol/extent';
 
 export default {
   name: "LeafletMapView",
   data() {
     return{
-    eoliennes : ["Gibloux 1", "Gibloux 2", "Glâney 1", "Glâney 2", "Vuisternens", "Esserta", "Schwyberg 1", "Schwyberg 2", "Surpierre-Cheiry", "Sonnaz 1", "Sonnaz 2"],
-    locations : [
-      ["Gibloux 1", 46.67679, 7.02146],
-      ["Gibloux 2", 46.66365, 7.00686],
-      ["Glâney 1", 46.67890, 6.87359],
-      ["Glâney 2", 46.65247, 6.84562],
-      ["Vuisternens", 46.62848, 6.90941],
-      ["Esserta", 46.61058, 6.94127],
-      ["Schwyberg 1", 46.68031, 7.25892],
-      ["Schwyberg 2", 46.69877, 7.26710],
-      ["Surpierre-Cheiry", 46.74431, 6.84192],
-      ["Sonnaz 1", 46.84741, 7.11054],
-      ["Sonnaz 2", 46.83535, 7.09383]
-    ],
       center: [46.68856, 7.07903],
       lmap:null,
-      zoom: 10
+      zoom: 10,
+      eoliennes : ["Vue générale", "Gibloux 1", "Gibloux 2", "Glâney 1", "Glâney 2", "Vuisternens", "Esserta", "Schwyberg 1", "Schwyberg 2", "Surpierre-Cheiry", "Sonnaz 1", "Sonnaz 2"],
+      locations : [
+        ["Gibloux1", 46.67679, 7.02146],
+        ["Gibloux2", 46.66365, 7.00686],
+        ["Glaney1", 46.67890, 6.87359],
+        ["Glaney2", 46.65247, 6.84562],
+        ["Vuisternens", 46.62848, 6.90941],
+        ["Esserta", 46.61058, 6.94127],
+        ["Schwyberg1", 46.68031, 7.25892],
+        ["Schwyberg2", 46.69877, 7.26710],
+        ["Surpierre-Cheiry", 46.74431, 6.84192],
+        ["Sonnaz1", 46.84741, 7.11054],
+        ["Sonnaz2", 46.83535, 7.09383]
+      ],
     }
   },
   methods: {
@@ -61,24 +61,6 @@ export default {
         }),
       };
     return basemaps
-    },
-
-    AffichageViewsheds () {
-      let viewsheds = {
-        'Esserta' : L.imageOverlay(require('../../assets/Esserta.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Gibloux1' : L.imageOverlay(require('../../assets/Gibloux1.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Gibloux2' : L.imageOverlay(require('../../assets/Gibloux2.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Glaney1' : L.imageOverlay(require('../../assets/Glaney1.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Glaney2' : L.imageOverlay(require('../../assets/Glaney2.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Surpierre-Cheiry' : L.imageOverlay(require('../../assets/Surpierre-Cheiry.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Sonnaz1' : L.imageOverlay(require('../../assets/Sonnaz1.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Sonnaz2' : L.imageOverlay(require('../../assets/Sonnaz2.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Schwyberg1' : L.imageOverlay(require('../../assets/Schwyberg1.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Schwyberg2' : L.imageOverlay(require('../../assets/Schwyberg2.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-        'Vuisternens' : L.imageOverlay(require('../../assets/Vuisternens.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap),
-      };
-      L.control.layers(viewsheds).addTo(this.lmap);
-      return
     },
 
     setupPolylineMeasure () {
@@ -131,57 +113,28 @@ export default {
       return
     },
 
-    ZoomOnObjects(){
-      //var test = document.getElementById('liste').value //Récupere la valeur dans la liste 
-      if (this.locations[0] == "Générale") { //Création de la condition
-        var map_zoom = this.lmap.setView(this.center, this.zoom); //Changement du zoom
-        }
-      if (this.locations.eolienne == "Gibloux 1") { //Création de la condition
-        var map_zoom = this.lmap.setView([locations.lat, locations.long], 15); //Changement du zoom
-        }
-      if (test == "Gibloux 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[1][1], locations[1][2]], 15);//Changement du zoom
-        }
-      if (test == "Glâney 1") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[2][1], locations[2][2]], 15);//Changement du zoom
-        }
-      if (test == "Glâney 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[3][1], locations[3][2]], 15);//Changement du zoom
-        }
-      if (test == "Vuisternens") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[4][1], locations[4][2]], 15);//Changement du zoom
-        }
-      if (test == "Esserta") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[5][1], locations[5][2]], 15);//Changement du zoom
-        }
-      if (test == "Schwyberg 1") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[6][1], locations[6][2]], 15);//Changement du zoom
-        }
-      if (test == "Schwyberg 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[7][1], locations[7][2]], 15);//Changement du zoom
-        }
-      if (test == "Surpierre-Cheiry") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[8][1], locations[8][2]], 15);//Changement du zoom
-        }
-      if (test == "Sonnaz 1") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[9][1], locations[9][2]], 15);//Changement du zoom
-        }
-      if (test == "Sonnaz 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[10][1], locations[10][2]], 15);//Changement du zoom
-        }
-      return
+    ZoomOnObjects() {
+      for(var i = 0; i < this.locations.length; i++) {
+        this.lmap.setView([this.locations[i][1], this.locations[i][2]], 13); //Changement du zoom
+      };
+      return 
     },
-  
+
+    AffichageViewsheds () {
+      for(var i = 0; i < this.locations.length; i++) {
+        L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
+        };
+      return 
+    },
   },
   mounted() {
     let basemapObject = this.setupBaseMaps();
     this.lmap = this.setupLeafletMap(this.center,this.zoom,basemapObject);
     this.AffichageMarkers();
+    this.ZoomOnObjects();
     this.AffichageViewsheds();
     L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
     this.setupPolylineMeasure();
-    this.MenuZoom ();
-    this.ZoomOnObjects();
     },
 }
 </script>
