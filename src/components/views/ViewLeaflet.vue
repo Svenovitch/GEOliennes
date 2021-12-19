@@ -1,7 +1,7 @@
 <template>
   <div id="l-container"></div>
   <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
-  <select @change="ZoomOnObjects(eolienne)" v-model="eolienne">
+  <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
     <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
   </select>
 </template>
@@ -13,6 +13,7 @@ import 'leaflet.polylinemeasure';
 import { toFunction } from 'ol/style/Style';
 import Interaction from 'ol/interaction/Interaction';
 import { forEachCorner } from 'ol/extent';
+import { remove } from 'ol/array';
 
 export default {
   name: "LeafletMapView",
@@ -21,7 +22,7 @@ export default {
       center: [46.68856, 7.07903],
       lmap:null,
       zoom: 10,
-      eoliennes : ["Vue générale", "Gibloux 1", "Gibloux 2", "Glâney 1", "Glâney 2", "Vuisternens", "Esserta", "Schwyberg 1", "Schwyberg 2", "Surpierre-Cheiry", "Sonnaz 1", "Sonnaz 2"],
+      eoliennes : ["Vue générale", "Gibloux1", "Gibloux2", "Glaney1", "Glaney2", "Vuisternens", "Esserta", "Schwyberg1", "Schwyberg2", "Surpierre-Cheiry", "Sonnaz1", "Sonnaz2"],
       locations : [
         ["Gibloux1", 46.67679, 7.02146],
         ["Gibloux2", 46.66365, 7.00686],
@@ -113,19 +114,27 @@ export default {
       return
     },
 
-    ZoomOnObjects() {
+    ZoomOnObjects(eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
-        this.lmap.setView([this.locations[i][1], this.locations[i][2]], 13); //Changement du zoom
+        if (eolienne==this.locations[i][0]) {
+          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 12); //Changement du zoom
+        }
+        if (eolienne=='Vue générale') {
+          this.lmap.setView(this.center, this.zoom);
+        }         
       };
       return 
     },
 
-    AffichageViewsheds () {
+    AffichageViewsheds (eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
-        L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
-        };
+        if (eolienne==this.locations[i][0]) {
+          L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
+        }
+      };
       return 
     },
+
   },
   mounted() {
     let basemapObject = this.setupBaseMaps();
@@ -148,7 +157,7 @@ export default {
     line-height: 24px;
     font-family: "Arial";
     padding: 5px 5px;
-    background-color: #FFFFFF ;
+    background-color: #FFFFFF;
     border-radius: 5px;
     width: 200px;
     border: 1px solid;
