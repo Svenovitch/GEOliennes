@@ -27,10 +27,6 @@ export default {
           route:"/axios"
         },
         { 
-          menuname:"2d_openlayers",
-          route:"/openlayers"
-        },
-        { 
           menuname:"2d_leaflet",
           route:"/leaflet"
         },

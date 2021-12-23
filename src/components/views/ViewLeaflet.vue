@@ -5,21 +5,42 @@
     <button class="button">Rechercher</button>
   </div>
   <div id="l-container"></div>
+  <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
+  <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
+    <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
+  </select>
 </template>
 
 <script>
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import 'leaflet.polylinemeasure';
+import { toFunction } from 'ol/style/Style';
+import Interaction from 'ol/interaction/Interaction';
+import { forEachCorner } from 'ol/extent';
+import { remove } from 'ol/array';
 
 export default {
   name: "LeafletMapView",
   data() {
-    return {
+    return{
       center: [46.68856, 7.07903],
       lmap:null,
       zoom: 10,
-      localite: "lausanne"
+      eoliennes : ["Vue générale", "Gibloux1", "Gibloux2", "Glaney1", "Glaney2", "Vuisternens", "Esserta", "Schwyberg1", "Schwyberg2", "Surpierre-Cheiry", "Sonnaz1", "Sonnaz2"],
+      locations : [
+        ["Gibloux1", 46.67679, 7.02146],
+        ["Gibloux2", 46.66365, 7.00686],
+        ["Glaney1", 46.67890, 6.87359],
+        ["Glaney2", 46.65247, 6.84562],
+        ["Vuisternens", 46.62848, 6.90941],
+        ["Esserta", 46.61058, 6.94127],
+        ["Schwyberg1", 46.68031, 7.25892],
+        ["Schwyberg2", 46.69877, 7.26710],
+        ["Surpierre-Cheiry", 46.74431, 6.84192],
+        ["Sonnaz1", 46.84741, 7.11054],
+        ["Sonnaz2", 46.83535, 7.09383]
+      ],
     }
   },
   methods: {
@@ -48,41 +69,6 @@ export default {
         }),
       };
     return basemaps
-    },
-
-    AffichageViewsheds () {
-      var ViewshedUrl = require('../../assets/Vuisternens.png'),
-        ViewshedBounds = [[46.4354657239999966, 6.6232650810000004], [47.0140361050000024, 7.3865939730000001]];
-        L.imageOverlay(ViewshedUrl, ViewshedBounds, {opacity: 0.60}).addTo(this.lmap); 
-      return
-    },
-
-    MenuZoom () {
-      var zoom_to = L.control({position: "topleft"});//Position en haut à gauche du contrôle
-      zoom_to.onAdd = function(lmap) {
-        var div = L.DomUtil.create("div", "menu");//Fait le lien avec le css
-        L.DomEvent.on(div, 'mouseover', L.DomEvent.stopPropagation);//Permet que la souris passe sur la fenêtre et pas sur la map
-        L.DomEvent.on(div, 'click', L.DomEvent.stopPropagation);//Permet que l'on clique sur la bouton et pas sur la map
-        div.innerHTML = //Définit un division HTML dans le javascript
-        '<div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"><p>Eoliennes: <br></div>'+ //Créer le titre et le style 
-          '<select id="liste" onchange="zoom(this.value)">'+ //Créer une liste déroulante
-            '<option value="Gibloux 1">Gibloux 1</option>'+
-            '<option value="Gibloux 2">Gibloux 2</option>'+
-            '<option value="Glâney 1">Glâney 1</option>'+
-            '<option value="Glâney 2">Glâney 2</option>'+
-            '<option value="Vuisternens">Vuisternens</option>'+
-            '<option value="Esserta">Esserta</option>'+
-            '<option value="Schwyberg 1">Schwyberg 1</option>'+
-            '<option value="Schwyberg 2">Schwyberg 2</option>'+
-            '<option value="Surpierre-Cheiry">Surpierre-Cheiry</option>'+
-            '<option value="Sonnaz 1">Sonnaz 1</option>'+
-            '<option value="Sonnaz 2">Sonnaz 2</option>'+
-          '</select>'+
-        '</p>'
-        return div;
-      };
-      zoom_to.addTo(this.lmap);//Ajoute à la carte
-    return
     },
 
     setupPolylineMeasure () {
@@ -121,81 +107,50 @@ export default {
 
     AffichageMarkers () {
       //Paramètres pour l'icone des éoliennes      
-      var locations = [
-        ["Gibloux 1", 46.67679,7.02146],
-        ["Gibloux 2", 46.66365,7.00686],
-        ["Glâney 1", 46.67890,6.87359],
-        ["Glâney 2", 46.65247,6.84562],
-        ["Vuisternens", 46.62848,6.90941],
-        ["Esserta", 46.61058,6.94127],
-        ["Schwyberg 1", 46.68031,7.25892],
-        ["Schwyberg 2", 46.69877,7.26710],
-        ["Surpierre-Cheiry", 46.74431,6.84192],
-        ["Sonnaz 1", 46.84741,7.11054],
-        ["Sonnaz 2", 46.83535,7.09383]
-      ];
       var iconeoliennes = L.icon({
         iconUrl: require('../../assets/eolienne.png'),
         iconAnchor: [14, 14],//Centrage de l'icone au milieu de ce dernier
         iconSize: [28, 28]//Taille de l'icone
         });
       //Lien vers l'icone au format "png"
-      for (var i = 0; i < locations.length; i++) {
-        var markers = L.marker([locations[i][1], locations[i][2]], {icon: iconeoliennes})
-          .bindPopup(locations[i][0])
+      for (var i = 0; i < this.locations.length; i++) {
+        var markers = L.marker([this.locations[i][1], this.locations[i][2]], {icon: iconeoliennes})
+          .bindPopup(this.locations[i][0])
           .addTo(this.lmap);
       }
-      return markers
-    },
-
-    ZoomOnObjects(){
-      var test = document.getElementById('liste').value //Récupere la valeur dans la liste 
-      if (test == "Gibloux 1") { //Création de la condition
-        var map_zoom = this.lmap.setView([locations[0][1], locations[0][2]], 10); //Changement du zoom
-        }
-      if (test == "Gibloux 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[1][1], locations[1][2]], 10);//Changement du zoom
-        }
-      if (test == "Glâney 1") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[2][1], locations[2][2]], 10);//Changement du zoom
-        }
-      if (test == "Glâney 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[3][1], locations[3][2]], 10);//Changement du zoom
-        }
-      if (test == "Vuisternens") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[4][1], locations[4][2]], 10);//Changement du zoom
-        }
-      if (test == "Esserta") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[5][1], locations[5][2]], 10);//Changement du zoom
-        }
-      if (test == "Schwyberg 1") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[6][1], locations[6][2]], 10);//Changement du zoom
-        }
-      if (test == "Schwyberg 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[7][1], locations[7][2]], 10);//Changement du zoom
-        }
-      if (test == "Surpierre-Cheiry") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[8][1], locations[8][2]], 10);//Changement du zoom
-        }
-      if (test == "Sonnaz 1") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[9][1], locations[9][2]], 10);//Changement du zoom
-        }
-      if (test == "Sonnaz 2") {//Création de la condition
-        var map_zoom = this.lmap.setView([locations[10][1], locations[10][2]], 10);//Changement du zoom
-        }
       return
     },
-  
+
+    ZoomOnObjects(eolienne) {
+      for(var i = 0; i < this.locations.length; i++) {
+        if (eolienne==this.locations[i][0]) {
+          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 12); //Changement du zoom
+        }
+        if (eolienne=='Vue générale') {
+          this.lmap.setView(this.center, this.zoom);
+        }         
+      };
+      return 
+    },
+
+    AffichageViewsheds (eolienne) {
+      for(var i = 0; i < this.locations.length; i++) {
+        if (eolienne==this.locations[i][0]) {
+          L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
+        }
+      };
+      return 
+    },
+
   },
   mounted() {
     let basemapObject = this.setupBaseMaps();
     this.lmap = this.setupLeafletMap(this.center,this.zoom,basemapObject);
     this.AffichageMarkers();
-    L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
+    this.ZoomOnObjects();
     this.AffichageViewsheds();
+    L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
     this.setupPolylineMeasure();
-    this.MenuZoom ();
-    //this.ZoomOnObjects();
     },
 }
 </script>
@@ -209,7 +164,7 @@ export default {
     line-height: 24px;
     font-family: "Arial";
     padding: 5px 5px;
-    background-color: #FFFFFF ;
+    background-color: #FFFFFF;
     border-radius: 5px;
     width: 200px;
     border: 1px solid;
