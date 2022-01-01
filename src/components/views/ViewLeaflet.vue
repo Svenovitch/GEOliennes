@@ -128,8 +128,13 @@ export default {
 
     AffichageViewsheds (eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
-        if (eolienne==this.locations[i][0]) {
-          L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
+        var eolienne_old = eolienne
+        if (eolienne == this.locations[i][0]) {
+          var Viewshed = L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
+        }
+        if (eolienne_old != eolienne) {
+          if (this.lmap.hasLayer(Viewshed)) {
+            this.lmap.removeLayer(Viewshed)}
         }
       };
       return 
