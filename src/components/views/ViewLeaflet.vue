@@ -1,4 +1,9 @@
 <template>
+  <div class="box">
+    <textarea v-model="localite" class="textarea" placeholder="Rechercher" rows="1"></textarea>
+    {{localite}}
+    <button class="button">Rechercher</button>
+  </div>
   <div id="l-container"></div>
   <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
   <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
@@ -23,6 +28,7 @@ export default {
       lmap:null,
       zoom: 10,
       eoliennes : ["Vue générale", "Gibloux1", "Gibloux2", "Glaney1", "Glaney2", "Vuisternens", "Esserta", "Schwyberg1", "Schwyberg2", "Surpierre-Cheiry", "Sonnaz1", "Sonnaz2"],
+      localite : "",
       locations : [
         ["Gibloux1", 46.67679, 7.02146],
         ["Gibloux2", 46.66365, 7.00686],
@@ -49,10 +55,12 @@ export default {
 
     setupBaseMaps () {
       let basemaps = {
-        'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg'
-        ),
-        'Swissimage': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg'
-        ),
+        'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
+        attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
+        }),
+        'Swissimage': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.swissimage/default/current/3857/{z}/{x}/{y}.jpeg', {
+        attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
+        }),
         'OSM': L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
           attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
             'Imagery <a href="https://www.mapbox.com/">Mapbox</a>',
