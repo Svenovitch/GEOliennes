@@ -4,11 +4,11 @@
     {{localite}}
     <button class="button">Rechercher</button>
   </div>
-  <div id="l-container"></div>
-  <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
   <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
     <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
   </select>
+  <div id="l-container"></div>
+  <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
 </template>
 
 <script>

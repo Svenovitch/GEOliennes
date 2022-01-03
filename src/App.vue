@@ -23,10 +23,6 @@ export default {
           route:"/"
         },
         { 
-          menuname:"Axios",
-          route:"/axios"
-        },
-        { 
           menuname:"2d_leaflet",
           route:"/leaflet"
         },
