@@ -1,4 +1,5 @@
 <template>
+  <button v-on:click="groundView">Vue au sol</button>
   <div id="cesium-container"></div>
 </template>
 
@@ -42,6 +43,11 @@ export default {
       });
     },
 
+    groundView(){
+      let heightCam = this.viewer.scene.camera.positionCartographic.height
+      console.log(heightCam)
+    },
+
     /**
      * Init Cesium globe
      * 
@@ -72,7 +78,6 @@ export default {
           rectangle: rectangle
         }),
         fullscreenButton: false,
-        homeButton: false,
         sceneModePicker: false,
         selectionIndicator: false,
         timeline: false,
@@ -89,12 +94,17 @@ export default {
   mounted() {
     // add cesium ion token to the app
     Cesium.Ion.defaultAccessToken = process.env.VUE_APP_CESIUM_ION_TOKEN;
-    Cesium.GeoJsonDataSource.clampToGround = true
+    Cesium.GeoJsonDataSource.clampToGround = true;
+
+    // homeview sur canton Fribourg
+    var extent = Cesium.Rectangle.fromDegrees(6.72826,46.42755,7.39027,47.01382);
+    Cesium.Camera.DEFAULT_VIEW_RECTANGLE = extent;
+    Cesium.Camera.DEFAULT_VIEW_FACTOR = 0;
 
     this.viewer = this.setupCesiumGlobe();
     // Transparence du MNT, décommenter pour defaire le calcul de profondeur
-    //this.viewer.scene.globe.depthTestAgainstTerrain = true;
-    this.flytodirection(this.center,this.defaultheight,this.viewer)  
+    this.viewer.scene.globe.depthTestAgainstTerrain = true;
+    // this.flytodirection(this.center,this.defaultheight,this.viewer)  
     
     // Ajoute Swissbuilding et SwissTLM
     this.viewer.scene.primitives.add(this.getSwissBuilding());
@@ -123,16 +133,42 @@ export default {
 //          scale : 10,
 //        },
         ellipse: {
-          semiMinorAxis: 50.0,
-          semiMajorAxis: 50.0,
+          semiMinorAxis: 5,
+          semiMajorAxis: 5,
+          heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
           height: 0,
-          extrudedHeight: 500.0,
+          extrudedHeight: 90,
+          material: Cesium.Color.AQUA,
+        },
+      })
+      this.viewer.entities.add({
+        position: positions[i],
+        ellipse: {
+          semiMinorAxis: 30,
+          semiMajorAxis: 30,
           material: Cesium.Color.AQUA,
         },
       })
     };
 
+    const toolbar = document.querySelector("div.cesium-viewer-toolbar");
+    const modeButton = document.querySelector("span.cesium-sceneModePicker-wrapper");
+    const myButton = document.createElement("button");
+    myButton.classList.add("cesium-button", "cesium-toolbar-button");
+    myButton.innerHTML = "↓";
+    toolbar.insertBefore(myButton, modeButton);
+    const that = this
+    myButton.onclick = function(that){
+      console.log(that)
+      let heightCam = that.viewer.scene.camera.positionCartographic.height
+      console.log(heightCam);
+    };
+
+
+/*
     var entities = this.viewer.entities;
+
+    Test remise des modèles au niveau du sol
 
     var promise = Cesium.sampleTerrainMostDetailed(this.viewer.terrainProvider, positions);
     Cesium.when(promise, function(){
@@ -146,6 +182,7 @@ export default {
             entity.ellipse.extrudedHeight = 500 + terrainHeight;
         }
     });
+*/
   },
 };
 </script>
