@@ -1,8 +1,7 @@
 <template>
   <div class="box">
     <textarea v-model="localite" class="textarea" placeholder="Rechercher" rows="1"></textarea>
-    {{localite}}
-    <button class="button">Rechercher</button>
+    <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
   </div>
   <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
     <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
@@ -15,6 +14,7 @@
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import 'leaflet.polylinemeasure';
+import axios from 'axios'
 import { toFunction } from 'ol/style/Style';
 import Interaction from 'ol/interaction/Interaction';
 import { forEachCorner } from 'ol/extent';
@@ -42,6 +42,8 @@ export default {
         ["Sonnaz1", 46.84741, 7.11054],
         ["Sonnaz2", 46.83535, 7.09383]
       ],
+      apiURL:"https://api3.geo.admin.ch/rest/services/api/SearchServer?searchText=",
+      apiURLEnd: "&type=locations&geometryFormat=geojson",
     }
   },
   methods: {
@@ -136,19 +138,43 @@ export default {
 
     AffichageViewsheds (eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
-        var eolienne_old = eolienne
-        if (eolienne == this.locations[i][0]) {
-          var Viewshed = L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
-        }
-        if (eolienne_old != eolienne) {
-          if (this.lmap.hasLayer(Viewshed)) {
-            this.lmap.removeLayer(Viewshed)}
+        if (eolienne==this.locations[i][0]) {
+          L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
         }
       };
       return 
     },
 
+    async getLocationsInfos(apiURL,localite,apiURLEnd){
+
+      const response = await axios.get(apiURL+localite+apiURLEnd)
+      console.log(response.data.features)
+
+      //response status handling: success & error
+      if (response.status == 200){
+        // Get & return first location
+          var LocaliteLat = response.data.features[0].properties.lat
+          var LocaliteLon = response.data.features[0].properties.lon
+        this.lmap.setView([LocaliteLat, LocaliteLon], 12)
+      }
+
+      if (response.status == 404){
+        throw "Didn't find any answers";
+      }
+      else {
+        throw "Ouch an unknown error occurred";
+      }
+    },
   },
+
+  async mounted() {
+    try {
+      await this.getLocationsInfos(this.apiURL,this.localite,this.apiURLEnd);
+    } catch(e) {
+      console.error(e);
+    }
+  },
+
   mounted() {
     let basemapObject = this.setupBaseMaps();
     this.lmap = this.setupLeafletMap(this.center,this.zoom,basemapObject);

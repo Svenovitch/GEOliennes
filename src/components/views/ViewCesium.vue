@@ -1,4 +1,5 @@
 <template>
+  <button v-on:click="groundView">Vue au sol</button>
   <div id="cesium-container"></div>
 </template>
 
@@ -42,6 +43,27 @@ export default {
       });
     },
 
+    groundView(){
+      var viewer = this.viewer
+      let posCam = viewer.scene.camera.positionCartographic
+      let latCam = posCam.latitude
+      let longCam = posCam.longitude
+      Cesium.sampleTerrain(viewer.terrainProvider, 9, [posCam])
+      .then(function(samples) {
+        let groundHeight = samples[0].height;
+        var destHeight = groundHeight + 2
+        console.log(destHeight)
+        viewer.camera.flyTo({
+          destination : Cesium.Cartesian3.fromRadians(longCam, latCam, destHeight),
+          orientation: {
+            heading: Cesium.Math.toRadians(90.0),
+            pitch: Cesium.Math.toRadians(0.0),
+            roll: 0.0,
+          },
+        });
+      });
+    },
+
     /**
      * Init Cesium globe
      * 
@@ -72,7 +94,6 @@ export default {
           rectangle: rectangle
         }),
         fullscreenButton: false,
-        homeButton: false,
         sceneModePicker: false,
         selectionIndicator: false,
         timeline: false,
@@ -89,12 +110,15 @@ export default {
   mounted() {
     // add cesium ion token to the app
     Cesium.Ion.defaultAccessToken = process.env.VUE_APP_CESIUM_ION_TOKEN;
-    Cesium.GeoJsonDataSource.clampToGround = true
+
+    // homeview sur canton Fribourg
+    var extent = Cesium.Rectangle.fromDegrees(6.72826,46.42755,7.39027,47.01382);
+    Cesium.Camera.DEFAULT_VIEW_RECTANGLE = extent;
+    Cesium.Camera.DEFAULT_VIEW_FACTOR = 0;
 
     this.viewer = this.setupCesiumGlobe();
     // Transparence du MNT, décommenter pour defaire le calcul de profondeur
-    //this.viewer.scene.globe.depthTestAgainstTerrain = true;
-    this.flytodirection(this.center,this.defaultheight,this.viewer)  
+    this.viewer.scene.globe.depthTestAgainstTerrain = true;
     
     // Ajoute Swissbuilding et SwissTLM
     this.viewer.scene.primitives.add(this.getSwissBuilding());
@@ -123,29 +147,22 @@ export default {
 //          scale : 10,
 //        },
         ellipse: {
-          semiMinorAxis: 50.0,
-          semiMajorAxis: 50.0,
-          height: 0,
-          extrudedHeight: 500.0,
+          semiMinorAxis: 5,
+          semiMajorAxis: 5,
+          heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+          extrudedHeight: 90,
+          material: Cesium.Color.AQUA,
+        },
+      })
+      this.viewer.entities.add({
+        position: positions[i],
+        ellipse: {
+          semiMinorAxis: 30,
+          semiMajorAxis: 30,
           material: Cesium.Color.AQUA,
         },
       })
     };
-
-    var entities = this.viewer.entities;
-
-    var promise = Cesium.sampleTerrainMostDetailed(this.viewer.terrainProvider, positions);
-    Cesium.when(promise, function(){
-        for (var i = 0; i < entities.length; i++) {
-            var entity = entities[i];
-            var position = positions[i];
-            console.log(position);
-            terrainSamplePositions.push( Cesium.Cartographic.fromCartesian(position));
-            var terrainHeight = terrainSamplePositions[i].height;
-            entity.ellipse.height = terrainHeight;
-            entity.ellipse.extrudedHeight = 500 + terrainHeight;
-        }
-    });
   },
 };
 </script>
