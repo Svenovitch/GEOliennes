@@ -217,7 +217,7 @@ export default {
 
 <style scoped>
 #l-container {
-  height: 600px;
+  height: 500px;
 }
 /*Paramètres de style des menus dans leaflet */
 .menu {

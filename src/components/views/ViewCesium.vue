@@ -95,24 +95,16 @@ export default {
             position: Cesium.Cartesian3.fromRadians(position.longitude,position.latitude, groundHeight),
             model : {
               uri: uri,
-              //gltf : '../../assets/scene.glb',
-              //heightReference : Cesium.HeightReference.CLAMP_TO_GROUND,
+
               scale : 15,
               color : Cesium.Color.WHITE,
             },
-//            ellipse: {
-//              semiMinorAxis: 5,
-//              semiMajorAxis: 5,
-//              height: groundHeight,
-//              extrudedHeight: groundHeight + 90,
-//              material: Cesium.Color.AQUA,
-//            },
           });
           viewer.entities.add({
             position: location,
             ellipse: {
-              semiMinorAxis: 30,
-              semiMajorAxis: 30,
+              semiMinorAxis: 90,
+              semiMajorAxis: 90,
               material: Cesium.Color.AQUA,
             },
           });
@@ -190,6 +182,6 @@ export default {
 
 <style scoped>
 #cesium-container {
-  height: 500px;
+  height: 600px;
 }
 </style>
