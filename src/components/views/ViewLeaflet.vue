@@ -133,7 +133,7 @@ export default {
     ZoomOnObjects(eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
         if (eolienne==this.locations[i][0]) {
-          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 12); //Changement du zoom
+          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 15); //Changement du zoom
         }
         if (eolienne=='Vue générale') {
           this.lmap.setView(this.center, this.zoom);
@@ -147,7 +147,7 @@ export default {
         this.lmap.eachLayer(function (layer) {
         });
         if (eolienne==this.locations[i][0]) {
-          var viewshed = new L.imageOverlay(require('../../assets/'+eolienne+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60})
+          var viewshed = new L.imageOverlay(require('../../assets/'+eolienne+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.40})
           this.TestViewsheds(viewshed)
         }
       };
