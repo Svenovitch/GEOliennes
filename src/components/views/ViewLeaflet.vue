@@ -3,6 +3,7 @@
     <textarea v-model="localite" class="textarea" placeholder="Rechercher" rows="1"></textarea>
     <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
   </div>
+  <p>Choisir une éolienne:</p>
   <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
     <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
   </select>
