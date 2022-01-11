@@ -6,7 +6,7 @@
           <!-- Affichage d'une barre de recherche permettant de reprendre la localité introduite par l'utilisateur -->
           <textarea v-model="localite" class="textarea" placeholder="Recherche de lieu" rows="1" style="height:50px"></textarea>
           <!-- Bouton lançant la fonction de géolocalisation -->
-          <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
+          <button class="button" @click="zoomToGeolocalisation(apiURL,localite,apiURLEnd)">Rechercher</button>
         </div>
       </div>
     </div>
@@ -99,14 +99,8 @@ export default {
     return polylineMeasure
     },    
     
-    /**
-     * Init Leaflet map
-     * 
-     * @param {number[]} mapcenter center of the map in EPSG:3857
-     * @param {number} mapzoom zoomlevel
-     * @returns {Map} initmap new leaflet map
-     */
 
+    // Initialisation de la carte
     setupLeafletMap (mapcenter,mapzoom,basemapObject) {
       let initmap = L.map("l-container", { 
         maxZoom: 18,
@@ -183,15 +177,9 @@ export default {
       };
     },
 
-    /**
-     * Géolocalisation sur une localité
-     * 
-     * @param {string} apiURL URL de l'api (début)
-     * @param {string} localite localité sur laquelle se géolocaliser
-     * @returns {string} apiURL URL de l'api (fin)
-     */
 
-    async getLocationsInfos(apiURL,localite,apiURLEnd){
+    // Géolocalisation via la barre de recherche
+    async zoomToGeolocalisation(apiURL,localite,apiURLEnd){
 
       const response = await axios.get(apiURL+localite+apiURLEnd)
       console.log(response.data.features)
