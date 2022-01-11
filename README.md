@@ -14,7 +14,7 @@ Il est composé de :
 
 ## Installation
 
-Premièrement, téléchargé le projet avec Git :
+Premièrement, téléchargez le projet avec Git :
 
 ```
 git clone https://github.com/Svenovitch/GEOliennes.git GEOliennes
@@ -25,11 +25,9 @@ Ensuite, ouvrez le répertoire dans votre ligne de commande et installer les dé
 ```
 cd GEOliennes
 npm install
-npm i leaflet.polylinemeasure (si nécessaire)
 ```
 
-Finalement, modifier le fichier .env à la base du projet afin de fournir votre clé Cesium ion :
-
+Finalement, créez un fichier .env à la base du projet afin de fournir votre clé Cesium ion :
 
 ```js
 VUE_APP_CESIUM_ION_TOKEN=VOTRE_CLE_CESIUM_ION
@@ -37,19 +35,19 @@ VUE_APP_CESIUM_ION_TOKEN=VOTRE_CLE_CESIUM_ION
 
 ## Exécution
 
-### Compiler et charger pour développement
+### Compilez et chargez pour développement
 ```
 npm run serve
 ```
 
-### Compiler et réduisez pour optimiser la production
+### Compilez et réduisez pour optimiser la production
 ```
 npm run build
 ```
 
 ### Ouvrez votre navigateur à l'adresse indiquée
 ```
-p. ex. http://localhost:8080/
+http://localhost:8080/
 ```
 
 ## Documentation utilisateur
