@@ -3,7 +3,9 @@
     <div class="level-item">
       <div class="column is-full">
         <div class="box" style="height: 120px">
+          <!-- Affichage d'une barre de recherche permettant de reprendre la localité introduite par l'utilisateur -->
           <textarea v-model="localite" class="textarea" placeholder="Recherche de lieu" rows="1" style="height:50px"></textarea>
+          <!-- Bouton lançant la fonction de géolocalisation -->
           <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
         </div>
       </div>
@@ -12,8 +14,10 @@
       <div class="column is-full">
         <p>Choisir une éolienne :</p>
         <div class="select">
-          <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft"> <!-- Affichage d'un menu déroulant qui appelle une fonction de zoom sur objet lorsqu'on séléctionne une éolienne -->
-            <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option> <!-- Boucle v-for sur les éoliennes contenues dans la liste des éoliennes pour affichage dans le menu déroulant -->
+          <!-- Affichage d'un menu déroulant qui appelle une fonction de zoom sur objet lorsqu'on séléctionne une éolienne -->
+          <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft">
+            <!-- Boucle v-for sur les éoliennes contenues dans la liste des éoliennes pour affichage dans le menu déroulant -->
+            <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option> 
           </select>
         </div>
       </div>
@@ -56,13 +60,6 @@ export default {
     }
   },
   methods: {
-    /**
-     * Init Leaflet map
-     * 
-     * @param {number[]} mapcenter center of the map in EPSG:3857
-     * @param {number} mapzoom zommlevel
-     * @returns {Map} initmap new leaflet map
-     */
 
     setupBaseMaps () {
       let basemaps = { // Définition des fonds de plan WMTS
@@ -100,7 +97,15 @@ export default {
                 this.lmap.on('polylinemeasure:move', debugevent);
                 this.lmap.on('polylinemeasure:remove', debugevent);
     return polylineMeasure
-    },           
+    },    
+    
+    /**
+     * Init Leaflet map
+     * 
+     * @param {number[]} mapcenter center of the map in EPSG:3857
+     * @param {number} mapzoom zoomlevel
+     * @returns {Map} initmap new leaflet map
+     */
 
     setupLeafletMap (mapcenter,mapzoom,basemapObject) {
       let initmap = L.map("l-container", { 
@@ -178,6 +183,14 @@ export default {
       };
     },
 
+    /**
+     * Géolocalisation sur une localité
+     * 
+     * @param {string} apiURL URL de l'api (début)
+     * @param {string} localite localité sur laquelle se géolocaliser
+     * @returns {string} apiURL URL de l'api (fin)
+     */
+
     async getLocationsInfos(apiURL,localite,apiURLEnd){
 
       const response = await axios.get(apiURL+localite+apiURLEnd)
@@ -185,9 +198,10 @@ export default {
 
       //response status handling: success & error
       if (response.status == 200){
-        // Get & return first location
+        // Get & return first location (lat et lon)
           var LocaliteLat = response.data.features[0].properties.lat
           var LocaliteLon = response.data.features[0].properties.lon
+        //Centrage sur la localité avec zoom défini à 15
         this.lmap.setView([LocaliteLat, LocaliteLon], 15)
       }
 
