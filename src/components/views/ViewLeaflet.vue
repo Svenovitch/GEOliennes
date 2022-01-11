@@ -1,12 +1,24 @@
 <template>
-  <div class="box">
-    <textarea v-model="localite" class="textarea" placeholder="Rechercher" rows="1"></textarea>
-    <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
-  </div>
-  <p>Choisir une éolienne:</p>
-  <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft"> <!-- Affichage d'un menu déroulant qui appelle une fonction de zoom sur objet lorsqu'on séléctionne une éolienne -->
-    <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option> <!-- Boucle v-for sur les éoliennes contenues dans la liste des éoliennes pour affichage dans le menu déroulant -->
-  </select>
+  <nav class="level" style="height: 100px">
+    <div class="level-item">
+      <div class="column is-full">
+        <div class="box" style="height: 120px">
+          <textarea v-model="localite" class="textarea" placeholder="Recherche de lieu" rows="1" style="height:50px"></textarea>
+          <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
+        </div>
+      </div>
+    </div>
+    <div class="level-item">
+      <div class="column is-full">
+        <p>Choisir une éolienne :</p>
+        <div class="select">
+          <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft"> <!-- Affichage d'un menu déroulant qui appelle une fonction de zoom sur objet lorsqu'on séléctionne une éolienne -->
+            <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option> <!-- Boucle v-for sur les éoliennes contenues dans la liste des éoliennes pour affichage dans le menu déroulant -->
+          </select>
+        </div>
+      </div>
+    </div>
+  </nav>
   <div id="l-container"></div>
   <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
 </template>
@@ -215,7 +227,7 @@ export default {
 
 <style scoped>
 #l-container {
-  height: 500px;
+  height: 600px;
 }
 /*Paramètres de style des menus dans leaflet */
 .menu {

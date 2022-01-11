@@ -1,7 +1,7 @@
 <template>
   <p class="title is-3 notification is-dark is-light"> {{ hellomessage }} </p>
   <div class="tile is-ancestor">
-    <div class="tile is-6 is-vertical">
+    <div class="tile is-6 is-vertical is-parent">
       <div class="content">
         <p class="title is-3">Notre équipe</p>
       </div>
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="tile is-6 is-vertical">
+    <div class="tile is-6 is-vertical is-parent">
       <div class="content">
         <p class="title is-3">Le Projet</p>
       </div>
