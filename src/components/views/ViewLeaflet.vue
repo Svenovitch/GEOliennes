@@ -28,10 +28,6 @@ import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import 'leaflet.polylinemeasure';
 import axios from 'axios'
-import { toFunction } from 'ol/style/Style';
-import Interaction from 'ol/interaction/Interaction';
-import { forEachCorner } from 'ol/extent';
-import { remove } from 'ol/array';
 
 export default {
   name: "LeafletMapView",
@@ -192,7 +188,7 @@ export default {
         // Get & return first location
           var LocaliteLat = response.data.features[0].properties.lat
           var LocaliteLon = response.data.features[0].properties.lon
-        this.lmap.setView([LocaliteLat, LocaliteLon], 12)
+        this.lmap.setView([LocaliteLat, LocaliteLon], 15)
       }
 
       if (response.status == 404){
