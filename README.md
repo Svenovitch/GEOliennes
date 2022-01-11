@@ -62,31 +62,31 @@ Le géoportail est composé de trois onglets:
 - Vue 2D, *pour la visualisation en 2D sur Leaflet*
 - Vue 3D, *pour la visualisation en 3D sur Cesium*
 
-![Page d'accueil](./images_rapport/accueil.png)
+![Page d'accueil](./images_rapport/accueil.PNG)
 
 
 ### Onglet "Vue 2D"
 
 La vue 2D se présente comme ceci :
 
-![Vue 2D](./images_rapport/vue_2D.png)
+![Vue 2D](./images_rapport/vue_2D.PNG)
 
 Les diverses fonctionnalités sont les suivantes :
 
-- Changer de fond de plan en appuyant sur le bouton ![Bouton de fonds de plan](./images_rapport/bouton_fonds_plan.png) afin de le choisir ![Fonds de plan](./images_rapport/fonds_plan.png)
-- Zoomer sur une éolienne précise en la choisissant dans la liste ![Liste des éoliennes](./images_rapport/choix_eolienne.png)
-- Mesurer des distances à l'aide des boutons ![Mesures de polylignes](./images_rapport/mesures_polylignes.png), le bouton du haut servant à mesurer et le bouton du bas à effacer les mesures
-- Zoomer sur une localité souhaitée en la tapant dans la barre de recherche ![Barre de recherche](./images_rapport/recherche.png)
+- Changer de fond de plan en appuyant sur le bouton ![Bouton de fonds de plan](./images_rapport/bouton_fonds_plan.PNG) afin de le choisir ![Fonds de plan](./images_rapport/fonds_plan.PNG)
+- Zoomer sur une éolienne précise en la choisissant dans la liste ![Liste des éoliennes](./images_rapport/choix_eolienne.PNG)
+- Mesurer des distances à l'aide des boutons ![Mesures de polylignes](./images_rapport/mesures_polylignes.PNG), le bouton du haut servant à mesurer et le bouton du bas à effacer les mesures
+- Zoomer sur une localité souhaitée en la tapant dans la barre de recherche ![Barre de recherche](./images_rapport/recherche.PNG)
 - Afficher le territoire depuis lequel une éolienne est vue (viewshed) en cliquant sur l'icône de l'éolienne correspondante :
     - en recliquant dessus, le viewshed est désactivé
     - il est possible d'afficher plusieurs viewsheds en même temps
     *Remarque : l'affichage n'est pas instantané*
 
-![Exemple de distance mesurée](./images_rapport/exemple_mesure.png)
+![Exemple de distance mesurée](./images_rapport/exemple_mesure.PNG)
 
 *Exemple de distance mesurée*
 
-![Exemple de viewshed](./images_rapport/exemple_viewshed.png)
+![Exemple de viewshed](./images_rapport/exemple_viewshed.PNG)
 
 *Exemple de viewshed*
 
@@ -95,13 +95,13 @@ Les diverses fonctionnalités sont les suivantes :
 
 La vue 3D se présente comme ceci :
 
-![Vue 3D](./images_rapport/vue_3D.png)
+![Vue 3D](./images_rapport/vue_3D.PNG)
 
 Deux boutons sont présents :
-- Le bouton ![Bouton de recherche](./images_rapport/recherche_3D.png) permet de faire une recherche de localité et de zoomer dessus
-- Le bouton ![Bouton home](./images_rapport/home_3D.png) permet de revenir à la vue initiale
+- Le bouton ![Bouton de recherche](./images_rapport/recherche_3D.PNG) permet de faire une recherche de localité et de zoomer dessus
+- Le bouton ![Bouton home](./images_rapport/home_3D.PNG) permet de revenir à la vue initiale
 
-Il est possible de se projeter au sol en zoomant à l'endroit souhaité puis en cliquant sur le bouton ![Bouton vue au sol](./images_rapport/bouton_vue_au_sol.png)
+Il est possible de se projeter au sol en zoomant à l'endroit souhaité puis en cliquant sur le bouton ![Bouton vue au sol](./images_rapport/bouton_vue_au_sol.PNG)
 
 La navigation se fait à l'aide de la souris :
 - Vue aérienne :
@@ -111,11 +111,11 @@ La navigation se fait à l'aide de la souris :
     - roulette pour aller en avant ou en arrière
     - clic gauche pour se déplacer *(attention: pour tourner sur soi-même, il y lieu de cliquer dans le ciel)*
 
-![Exemple d'un zoom sur une éolienne](./images_rapport/vue_3D_zoom.png)
+![Exemple d'un zoom sur une éolienne](./images_rapport/vue_3D_zoom.PNG)
 
 *Exemple d'un zoom sur une éolienne*
 
-![Exemple de vue sur les éoliennes](./images_rapport/vue_eoliennes.png)
+![Exemple de vue sur les éoliennes](./images_rapport/vue_eoliennes.PNG)
 
 *Exemple de vue sur les éoliennes*
 
