@@ -1,4 +1,4 @@
-# Vuejs 3.0 + carto2D/3D Seed
+# GEOliennes - Géoportail de visualisation d'éoliennes
 
 This is a basic starter project for a Vuejs 3.0 app (via vue-cli). 
 It includes :
