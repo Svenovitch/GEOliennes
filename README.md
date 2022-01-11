@@ -1,4 +1,6 @@
-# ![logo](./images_rapport/logo.png) GEOliennes - Géoportail de visualisation d'éoliennes
+![logo](./images_rapport/logo.png) 
+
+# GEOliennes - Géoportail de visualisation d'éoliennes
 
 Géoportail de visualisation d'éoliennes basé sur le framework Vuejs.
 
@@ -81,9 +83,11 @@ Les diverses fonctionnalités sont les suivantes :
     *Remarque : l'affichage n'est pas instantané*
 
 ![Exemple de distance mesurée](./images_rapport/exemple_mesure.png)
+
 *Exemple de distance mesurée*
 
 ![Exemple de viewshed](./images_rapport/exemple_viewshed.png)
+
 *Exemple de viewshed*
 
 
@@ -108,9 +112,11 @@ La navigation se fait à l'aide de la souris :
     - clic gauche pour se déplacer *(attention: pour tourner sur soi-même, il y lieu de cliquer dans le ciel)*
 
 ![Exemple d'un zoom sur une éolienne](./images_rapport/vue_3D_zoom.png)
+
 *Exemple d'un zoom sur une éolienne*
 
 ![Exemple de vue sur les éoliennes](./images_rapport/vue_eoliennes.png)
+
 *Exemple de vue sur les éoliennes*
 
 ## Rapport
@@ -182,7 +188,8 @@ Ensuite, plusieurs éléments 3D ont été ajoutés au viewer :
 La fonction principale du composant a été de créer une commande afin de projeter la position de la caméra à 2 mètres du sol afin de visualiser le paysage et l’impact des éoliennes sur celui-ci à la première personne.
 
 ![Vue du Mont Gibloux avec végétation](./images_rapport/gibloux_avec_veget.png)![Vue du Mont Gibloux sans végétation](./images_rapport/gibloux_sans_veget.png)
-Vue du Mont Gibloux avec et sans végétation/bâtiments
+
+*Vue du Mont Gibloux avec et sans végétation/bâtiments*
 
 
 ### Difficultés rencontrées
