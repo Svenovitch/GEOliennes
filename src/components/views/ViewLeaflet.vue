@@ -104,7 +104,7 @@ export default {
     setupLeafletMap (mapcenter,mapzoom,basemapObject) {
       let initmap = L.map("l-container", { 
         maxZoom: 18,
-        minZoom: 7,
+        minZoom: 10,
         maxBounds:[
             [45.680, 5.130],
             [47.860, 11.420]
