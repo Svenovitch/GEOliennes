@@ -1,5 +1,5 @@
 <template>
-  <button v-on:click="groundView">Vue au sol</button>
+  <button class="button" v-on:click="groundView">Vue au sol</button>
   <div id="cesium-container"></div>
 </template>
 
