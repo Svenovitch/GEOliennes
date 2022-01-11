@@ -19,15 +19,15 @@ export default {
     return {
       menuList:[
         {
-          menuname:"Hello",
+          menuname:"Accueil",
           route:"/"
         },
         { 
-          menuname:"2d_leaflet",
+          menuname:"Vue 2D",
           route:"/leaflet"
         },
         { 
-          menuname:"3d_cesium",
+          menuname:"Vue 3D",
           route:"/cesium"
         }
       ] 
