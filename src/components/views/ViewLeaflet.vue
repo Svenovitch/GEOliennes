@@ -3,8 +3,12 @@
     <textarea v-model="localite" class="textarea" placeholder="Rechercher" rows="1"></textarea>
     <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
   </div>
+<<<<<<< HEAD
   <p>Choisir une éolienne:</p>
   <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
+=======
+  <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft">
+>>>>>>> 7212825839f6a66ba957b206c2bc8a82dc929d19
     <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
   </select>
   <div id="l-container"></div>
@@ -109,6 +113,11 @@ export default {
     return initmap
     },
 
+    LienViewshedPopup(e) {
+      var location = e.popup._source._popup._content;
+      this.LoadViewsheds(location);
+    },
+
     AffichageMarkers () {
       //Paramètres pour l'icone des éoliennes      
       var iconeoliennes = L.icon({
@@ -118,8 +127,9 @@ export default {
         });
       //Lien vers l'icone au format "png"
       for (var i = 0; i < this.locations.length; i++) {
+        var popup = L.popup({closeOnClick: false, autoClose : false }).setContent(this.locations[i][0]);
         var markers = L.marker([this.locations[i][1], this.locations[i][2]], {icon: iconeoliennes})
-          .bindPopup(this.locations[i][0])
+          .bindPopup(popup)
           .addTo(this.lmap);
       }
       return
@@ -128,7 +138,7 @@ export default {
     ZoomOnObjects(eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
         if (eolienne==this.locations[i][0]) {
-          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 12); //Changement du zoom
+          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 15); //Changement du zoom
         }
         if (eolienne=='Vue générale') {
           this.lmap.setView(this.center, this.zoom);
@@ -137,13 +147,34 @@ export default {
       return 
     },
 
-    AffichageViewsheds (eolienne) {
+    LoadViewsheds(eolienne) {
       for(var i = 0; i < this.locations.length; i++) {
+        this.lmap.eachLayer(function (layer) {
+        });
         if (eolienne==this.locations[i][0]) {
-          L.imageOverlay(require('../../assets/'+this.locations[i][0]+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.60}).addTo(this.lmap)
+          var viewshed = new L.imageOverlay(require('../../assets/'+eolienne+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.40})
+          this.TestViewsheds(viewshed)
         }
       };
-      return 
+    },
+
+    TestViewsheds (viewshed) {
+      var count = 0
+      var deleteLayer
+      this.lmap.eachLayer(function(layer) {
+        if (typeof(layer._url) != "undefined") {
+          if (layer._url == viewshed._url) {
+            count = 1
+            deleteLayer = layer
+          }
+        }
+      });
+      if (count == 1) {
+        this.lmap.removeLayer(deleteLayer);
+      }
+      else {
+        viewshed.addTo(this.lmap);
+      };
     },
 
     async getLocationsInfos(apiURL,localite,apiURLEnd){
@@ -181,16 +212,17 @@ export default {
     this.lmap = this.setupLeafletMap(this.center,this.zoom,basemapObject);
     this.AffichageMarkers();
     this.ZoomOnObjects();
-    this.AffichageViewsheds();
     L.control.scale ({maxWidth:240, metric:true, imperial:false, position: 'bottomleft'}).addTo(this.lmap);
     this.setupPolylineMeasure();
-    },
+    this.lmap.on('popupopen', this.LienViewshedPopup);
+    this.lmap.on('popupclose', this.LienViewshedPopup);
+  },
 }
 </script>
 
 <style scoped>
 #l-container {
-  height: 600px;
+  height: 500px;
 }
 /*Paramètres de style des menus dans leaflet */
 .menu {
