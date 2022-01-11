@@ -146,7 +146,7 @@ export default {
         });
         if (eolienne==this.locations[i][0]) {
           var viewshed = new L.imageOverlay(require('../../assets/'+eolienne+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.40}) //Affichage du viewshed en appelant un fichier .png qui porte le même nom que l'éolienne séléctionnée avec une tansparence
-          this.TestViewsheds(viewshed) //Appel de la fonction TestViewsheds
+          this.TestViewsheds(viewshed) //Teste si existe déjà et retire/ajoute selon la réponse
         }
       };
     },
@@ -154,19 +154,19 @@ export default {
     TestViewsheds (viewshed) {
       var count = 0
       var deleteLayer
-      this.lmap.eachLayer(function(layer) {
+      this.lmap.eachLayer(function(layer) { //Pour un viewshed, test si il est deja affiché
         if (typeof(layer._url) != "undefined") {
-          if (layer._url == viewshed._url) {
+          if (layer._url == viewshed._url) { //viewsheds identifiés par leur url
             count = 1
             deleteLayer = layer
           }
         }
       });
       if (count == 1) {
-        this.lmap.removeLayer(deleteLayer);
+        this.lmap.removeLayer(deleteLayer); //Si existe déja, on supprime la couche identifiée plus haut
       }
       else {
-        viewshed.addTo(this.lmap);
+        viewshed.addTo(this.lmap); //Sinon, on l'ajoute à la carte
       };
     },
 
