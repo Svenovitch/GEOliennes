@@ -3,13 +3,9 @@
     <textarea v-model="localite" class="textarea" placeholder="Rechercher" rows="1"></textarea>
     <button class="button" @click="getLocationsInfos(apiURL,localite,apiURLEnd)">Rechercher</button>
   </div>
-<<<<<<< HEAD
   <p>Choisir une éolienne:</p>
-  <select @change="ZoomOnObjects(eolienne),AffichageViewsheds(eolienne)" v-model="eolienne" position="topleft">
-=======
-  <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft">
->>>>>>> 7212825839f6a66ba957b206c2bc8a82dc929d19
-    <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option>
+  <select @change="ZoomOnObjects(eolienne)" v-model="eolienne" position="topleft"> <!-- Affichage d'un menu déroulant qui appelle une fonction de zoom sur objet lorsqu'on séléctionne une éolienne -->
+    <option v-for="eolienne in eoliennes" :key="eolienne">{{eolienne}}</option> <!-- Boucle v-for sur les éoliennes contenues dans la liste des éoliennes pour affichage dans le menu déroulant -->
   </select>
   <div id="l-container"></div>
   <div style="font-weight: bold; text-decoration:underline; text-align: left; background-color: #FFFFFF;border-radius: 4px;"></div>
@@ -29,12 +25,12 @@ export default {
   name: "LeafletMapView",
   data() {
     return{
-      center: [46.68856, 7.07903],
+      center: [46.68856, 7.07903], //Centre de la carte par défaut
       lmap:null,
-      zoom: 10,
-      eoliennes : ["Vue générale", "Gibloux1", "Gibloux2", "Glaney1", "Glaney2", "Vuisternens", "Esserta", "Schwyberg1", "Schwyberg2", "Surpierre-Cheiry", "Sonnaz1", "Sonnaz2"],
+      zoom: 10, //Zoom par défaut
+      eoliennes : ["Vue générale", "Gibloux1", "Gibloux2", "Glaney1", "Glaney2", "Vuisternens", "Esserta", "Schwyberg1", "Schwyberg2", "Surpierre-Cheiry", "Sonnaz1", "Sonnaz2"], //Liste des éoliennes pour le menu déroulant (v-for)
       localite : "",
-      locations : [
+      locations : [ //Array contenant les éoliennes avec leur position en longitude/latitude
         ["Gibloux1", 46.67679, 7.02146],
         ["Gibloux2", 46.66365, 7.00686],
         ["Glaney1", 46.67890, 6.87359],
@@ -61,7 +57,7 @@ export default {
      */
 
     setupBaseMaps () {
-      let basemaps = {
+      let basemaps = { // Définition des fonds de plan WMTS
         'Carte nationale': L.tileLayer('https://wmts100.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-farbe/default/current/3857/{z}/{x}/{y}.jpeg', {
         attribution: 'Map data &copy; <a href="https://www.map.geo.admin.ch">Swisstopo</a> '
         }),
@@ -81,7 +77,7 @@ export default {
 
     setupPolylineMeasure () {
       let polylineMeasure =  L.control.polylineMeasure({position:'topleft', unit:'metres', showBearings:false, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false})
-          polylineMeasure.addTo (this.lmap);
+          polylineMeasure.addTo (this.lmap);//Ajout du contrôle pour mesurer des distances par polylignes
           //Code pour les debugs 
           function debugevent(e) { console.debug(e.type, e, polylineMeasure._currentLine) }
 
@@ -99,7 +95,7 @@ export default {
     },           
 
     setupLeafletMap (mapcenter,mapzoom,basemapObject) {
-      let initmap = L.map("l-container", {
+      let initmap = L.map("l-container", { 
         maxZoom: 18,
         minZoom: 7,
         maxBounds:[
@@ -107,53 +103,50 @@ export default {
             [47.860, 11.420]
             ],
       }
-      ).setView(mapcenter, mapzoom);
-      basemapObject.Swissimage.addTo(initmap);
-      L.control.layers(basemapObject).addTo(initmap);
+      ).setView(mapcenter, mapzoom); //Définition de la carte avec limites zoom et coordonnées centre
+      basemapObject.Swissimage.addTo(initmap); //Fond de plan par défaut à l'ouverture de la carte
+      L.control.layers(basemapObject).addTo(initmap); //Contrôle pour choisir le fond de plan
     return initmap
     },
 
-    LienViewshedPopup(e) {
+    LienViewshedPopup(e) { //Lien pour que le viewshed s'affiche lorsqu'on affiche la popup d'une éolienne
       var location = e.popup._source._popup._content;
-      this.LoadViewsheds(location);
+      this.LoadViewsheds(location); //Appel à la fonction qui affiche le viewshed
     },
 
     AffichageMarkers () {
       //Paramètres pour l'icone des éoliennes      
       var iconeoliennes = L.icon({
-        iconUrl: require('../../assets/eolienne.png'),
+        iconUrl: require('../../assets/eolienne.png'), //Lien vers l'icone au format "png"
         iconAnchor: [14, 14],//Centrage de l'icone au milieu de ce dernier
         iconSize: [28, 28]//Taille de l'icone
         });
-      //Lien vers l'icone au format "png"
-      for (var i = 0; i < this.locations.length; i++) {
-        var popup = L.popup({closeOnClick: false, autoClose : false }).setContent(this.locations[i][0]);
-        var markers = L.marker([this.locations[i][1], this.locations[i][2]], {icon: iconeoliennes})
+      for (var i = 0; i < this.locations.length; i++) { //Boucle sur la liste des éoliennes et leur position
+        var popup = L.popup({closeOnClick: false, autoClose : false }).setContent(this.locations[i][0]); //Affichage de la popup avec le nom de l'éolienne cliquée
+        var markers = L.marker([this.locations[i][1], this.locations[i][2]], {icon: iconeoliennes}) //Affichage de l'icône aux coordonnées de chaque éolienne
           .bindPopup(popup)
           .addTo(this.lmap);
       }
-      return
     },
 
-    ZoomOnObjects(eolienne) {
-      for(var i = 0; i < this.locations.length; i++) {
-        if (eolienne==this.locations[i][0]) {
-          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 15); //Changement du zoom
+    ZoomOnObjects(eolienne) { 
+      for(var i = 0; i < this.locations.length; i++) { //Boucle sur la liste des éoliennes et leur position
+        if (eolienne==this.locations[i][0]) { //Si le nom de l'éolienne choisie dans le menu déroulant (v-for) correspond à une éolienne existante...
+          this.lmap.setView([this.locations[i][1], this.locations[i][2]], 15); //...Déplacement au coordonnées de l'éolienne concernée et zoom
         }
-        if (eolienne=='Vue générale') {
-          this.lmap.setView(this.center, this.zoom);
+        if (eolienne=='Vue générale') { //Si "Vue générale" est choisi dans le menu...
+          this.lmap.setView(this.center, this.zoom); //...retour à la vue d'origine de la carte avec le zoom par défaut
         }         
       };
-      return 
     },
 
     LoadViewsheds(eolienne) {
-      for(var i = 0; i < this.locations.length; i++) {
+      for(var i = 0; i < this.locations.length; i++) { //Boucle sur la liste des éoliennes et leur position
         this.lmap.eachLayer(function (layer) {
         });
         if (eolienne==this.locations[i][0]) {
-          var viewshed = new L.imageOverlay(require('../../assets/'+eolienne+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.40})
-          this.TestViewsheds(viewshed)
+          var viewshed = new L.imageOverlay(require('../../assets/'+eolienne+'.png'), [[46.4344535851,6.62326508105], [47.0140361051,7.38658291045]], {opacity: 0.40}) //Affichage du viewshed en appelant un fichier .png qui porte le même nom que l'éolienne séléctionnée avec une tansparence
+          this.TestViewsheds(viewshed) //Appel de la fonction TestViewsheds
         }
       };
     },
